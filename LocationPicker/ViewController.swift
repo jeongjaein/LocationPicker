@@ -15,7 +15,7 @@ class ViewController: UIViewController {
     
     let pin = UIImageView()
     var task: DispatchWorkItem?
-    
+    var addressLabel = UILabel()
     
     
     override func viewDidLoad() {
@@ -30,11 +30,18 @@ class ViewController: UIViewController {
         pin.do {
             $0.image = #imageLiteral(resourceName: "marker")
         }
+        addressLabel.do {
+            $0.backgroundColor = .white
+            $0.alpha = 10
+            $0.text = "좌표가 찍힐 거에요"
+            $0.textColor = .red
+        }
     }
     
     func layout() {
         view.addSubview(mapView)
         view.addSubview(pin)
+        view.addSubview(addressLabel)
         
         pin.do {
             $0.translatesAutoresizingMaskIntoConstraints = false
@@ -43,14 +50,22 @@ class ViewController: UIViewController {
             $0.widthAnchor.constraint(equalToConstant: 35).isActive = true
             $0.heightAnchor.constraint(equalToConstant: 50).isActive = true
         }
+        addressLabel.do {
+            $0.translatesAutoresizingMaskIntoConstraints = false
+            $0.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+            $0.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
+            $0.widthAnchor.constraint(equalToConstant: 350).isActive = true
+            $0.heightAnchor.constraint(equalToConstant: 100).isActive = true
+        }
     }
 }
 
 extension ViewController: NMFMapViewCameraDelegate {
     func mapViewCameraIdle(_ mapView: NMFMapView) {
-            task = DispatchWorkItem {
+        task = DispatchWorkItem { [self] in
                 self.pin.alpha = 1
-                print(mapView.cameraPosition.target.lat)
+                
+                addressLabel.text = "\(mapView.cameraPosition.target.lat),   \(mapView.cameraPosition.target.lng)"
                 let lng = Double(self.mapView.cameraPosition.target.lng)
                 let lat = Double(self.mapView.cameraPosition.target.lat)
                 
