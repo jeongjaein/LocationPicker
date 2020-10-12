@@ -11,8 +11,12 @@ import Then
 
 class ViewController: UIViewController {
     var mapView = NMFMapView()
+    let cameraPosition = NMFCameraPosition()
+    
     let pin = UIImageView()
     var task: DispatchWorkItem?
+    
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -22,6 +26,7 @@ class ViewController: UIViewController {
     func attribute() {
         mapView = NMFMapView(frame: view.frame)
         mapView.addCameraDelegate(delegate: self)
+        
         pin.do {
             $0.image = #imageLiteral(resourceName: "marker")
         }
@@ -45,23 +50,9 @@ extension ViewController: NMFMapViewCameraDelegate {
     func mapViewCameraIdle(_ mapView: NMFMapView) {
             task = DispatchWorkItem {
                 self.pin.alpha = 1
-                //카메라포지션을 저장해줌(보기에편하게)
-                _ = self.mapView.cameraPosition
-                
+                print(mapView.cameraPosition.target.lat)
                 let lng = Double(self.mapView.cameraPosition.target.lng)
                 let lat = Double(self.mapView.cameraPosition.target.lat)
-                
-//                self.viewModel.inputs.longitude.onNext(lng)
-//                self.viewModel.inputs.latitude.onNext(lat)
-                
-//                self.viewModel.outputs.address
-//                    .subscribe(onNext: { value in
-//                        self.addressLable.text = String(value.address)
-//                        self.roadAddressLable.text = String(value.roadAddress)
-//                        self.lat = Double(value.lat)
-//                        self.lng = Double(value.lng)
-//                    })
-//                    .disposed(by: self.disposeBag)
                 
                 UIView.animate(withDuration: 0.25, delay: 0, usingSpringWithDamping: 0.5, initialSpringVelocity: 0.5, options: .curveEaseOut, animations: {
                     self.pin.transform = CGAffineTransform(translationX: 0, y: 0)
