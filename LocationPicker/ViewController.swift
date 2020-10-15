@@ -12,7 +12,6 @@ import Then
 class ViewController: UIViewController {
     var mapView = NMFMapView()
     let cameraPosition = NMFCameraPosition()
-    
     let pin = UIImageView()
     var task: DispatchWorkItem?
     var addressLabel = UILabel()
@@ -22,7 +21,9 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         attribute()
         layout()
+        searchTextField.delegate = self
     }
+    
     func attribute() {
         mapView = NMFMapView(frame: view.frame)
         mapView.addCameraDelegate(delegate: self)
@@ -45,6 +46,7 @@ class ViewController: UIViewController {
             $0.borderStyle = .line
         }
     }
+    
     
     func layout() {
         view.addSubview(mapView)
@@ -74,14 +76,16 @@ class ViewController: UIViewController {
             $0.heightAnchor.constraint(equalToConstant: 50).isActive = true
         }
     }
+    func getAddress(keyword: String) -> String {
+        print(keyword)
+        return keyword
+    }
 }
-
 extension ViewController: NMFMapViewCameraDelegate {
     func mapViewCameraIdle(_ mapView: NMFMapView) {
         task = DispatchWorkItem { [self] in
             self.pin.alpha = 1
             addressLabel.text = "\(mapView.cameraPosition.target.lat),   \(mapView.cameraPosition.target.lng)"
-            
             UIView.animate(withDuration: 0.25, delay: 0, usingSpringWithDamping: 0.5, initialSpringVelocity: 0.5, options: .curveEaseOut, animations: {
                 self.pin.transform = CGAffineTransform(translationX: 0, y: 0)
                 
@@ -95,6 +99,17 @@ extension ViewController: NMFMapViewCameraDelegate {
         UIView.animate(withDuration: 0.25, delay: 0, usingSpringWithDamping: 0.5, initialSpringVelocity: 0.5, options: .curveEaseOut, animations: {
             self.pin.transform = CGAffineTransform(translationX: 0, y: -10)
         })
+    }
+}
+extension ViewController: UITextFieldDelegate {
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        if textField.text!.isEmpty {
+            print("검색어를 입력해주세요 ")
+            return false
+        }else {
+            getAddress(keyword: textField.text ?? "")
+            return true
+        }
     }
 }
 
