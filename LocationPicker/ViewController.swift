@@ -21,7 +21,8 @@ class ViewController: UIViewController {
     var searchTextField = UITextField()
     let headers: HTTPHeaders = [ "Authorization": "KakaoAK 6cd40b04c090b1a033634e5051aab78c" ]
     let decoder = JSONDecoder()
-    var totalList: [Address] = []
+    var totalList: [NMGLatLng] = []
+    var cameraUpdate = NMFCameraUpdate()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -86,7 +87,7 @@ class ViewController: UIViewController {
         let parameters: [String: String] = [
             "query": keyword
         ]
-        AF.request("https://dapi.kakao.com/v2/local/search/address.json",
+        AF.request("https://dapi.kakao.com/v2/local/search/keyword.json",
                    method: .get,
                    parameters: parameters,
                    headers: headers).responseJSON(completionHandler: { [self] responds in
@@ -94,20 +95,31 @@ class ViewController: UIViewController {
                     case .success(let value):
                         if let addressList = JSON(value)["documents"].array {
                             for item in addressList {
-                                let addressName = item["address_name"].string ?? ""
-                                let jibunAddress = item["address_name"].string ?? "없음"
-                                let roadAddress = item["road_address"].string ?? "없음"
-                                let depthOneName = item["address"]["region_1depth_name"].string ?? ""
-                                let depthTwoName = item["address"]["region_2depth_name"].string ?? ""
-                                let depthThreeName = item["address"]["region_3depth_name"].string ?? ""
-                                let postCode = (item["address"]["zip_code"].string ?? "").isEmpty ? "우편번호 없음" : item["address"]["zip_code"].string ?? ""
-                                self.totalList.append(Address(addressName: addressName,
-                                                              postCode: postCode,
-                                                              roadAddr: roadAddress,
-                                                              jibunAddr: jibunAddress,
-                                                              depthOneAddr: depthOneName,
-                                                              deptTwoAddr: depthTwoName,
-                                                              deptThreeAddr: depthThreeName))
+                                let lng = item["x"].string ?? ""
+                                let lat = item["y"].string ?? ""
+                                var test: NMFCameraUpdate = NMFCameraUpdate(scrollTo: NMGLatLng(lat: Double(lat)!, lng: Double(lng)!))
+                                test.animation = .easeOut
+                                mapView.moveCamera(test)
+                                break
+                                //                                let addressName = item["address_name"].string ?? ""
+                                //                                let jibunAddress = item["address_name"].string ?? "없음"
+                                //                                let roadAddress = item["road_address"].string ?? "없음"
+                                //                                let depthOneName = item["address"]["region_1depth_name"].string ?? ""
+                                //                                let depthTwoName = item["address"]["region_2depth_name"].string ?? ""
+                                //                                let lng = item["address"]["x"].string ?? ""
+                                //                                let lat = item["address"]["y"].double ?? 0
+                                //                                let depthThreeName = item["address"]["region_3depth_name"].string ?? ""
+                                //                                let postCode = (item["address"]["zip_code"].string ?? "").isEmpty ? "우편번호 없음" : item["address"]["zip_code"].string ?? ""
+                                //                                totalList.append(Address(addressName: addressName,
+                                //                                                         postCode: postCode,
+                                //                                                         roadAddr: roadAddress,
+                                //                                                         jibunAddr: jibunAddress,
+                                //                                                         depthOneAddr: depthOneName,
+                                //                                                         deptTwoAddr: depthTwoName,
+                                //                                                         deptThreeAddr: depthThreeName,
+                                //                                                         lng: Double(lng)!,
+                                //                                                         lat: lat)
+                                //                                )
                             }
                         }
                         print(totalList)
@@ -115,6 +127,7 @@ class ViewController: UIViewController {
                         print(err)
                     }
                    })
+        
         return keyword
     }
 }

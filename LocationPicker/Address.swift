@@ -15,4 +15,6 @@ public struct Address {
     var depthOneAddr : String
     var deptTwoAddr : String
     var deptThreeAddr : String
+    var lng : Double
+    var lat : Double
 }
