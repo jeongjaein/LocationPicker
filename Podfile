@@ -14,6 +14,8 @@ target 'LocationPicker' do
 
   pod 'NMapsMap'
   pod 'Then'
+  pod 'Alamofire'
+  pod 'SwiftyJSON'
   target 'LocationPickerUITests' do
     # Pods for testing
   end

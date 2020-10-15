@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 51;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -17,6 +17,7 @@
 		CC8576042534759700075D98 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CC8576022534759700075D98 /* LaunchScreen.storyboard */; };
 		CC85760F2534759700075D98 /* LocationPickerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC85760E2534759700075D98 /* LocationPickerTests.swift */; };
 		CC85761A2534759700075D98 /* LocationPickerUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC8576192534759700075D98 /* LocationPickerUITests.swift */; };
+		CCAA83962538488000180D21 /* Address.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCAA83952538488000180D21 /* Address.swift */; };
 		D45C58B23A114C0878CC3E49 /* Pods_LocationPickerTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ADE4F4DDE6C3204A0223A6FB /* Pods_LocationPickerTests.framework */; };
 /* End PBXBuildFile section */
 
@@ -61,6 +62,7 @@
 		CC8576152534759700075D98 /* LocationPickerUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = LocationPickerUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		CC8576192534759700075D98 /* LocationPickerUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationPickerUITests.swift; sourceTree = "<group>"; };
 		CC85761B2534759700075D98 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		CCAA83952538488000180D21 /* Address.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Address.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -133,6 +135,7 @@
 				CC8576002534759700075D98 /* Assets.xcassets */,
 				CC8576022534759700075D98 /* LaunchScreen.storyboard */,
 				CC8576052534759700075D98 /* Info.plist */,
+				CCAA83952538488000180D21 /* Address.swift */,
 			);
 			path = LocationPicker;
 			sourceTree = "<group>";
@@ -165,7 +168,6 @@
 				32402006E2753BC2806F5143 /* Pods-LocationPickerTests.debug.xcconfig */,
 				8C4E149F7ED8BF46414717C5 /* Pods-LocationPickerTests.release.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};
@@ -409,6 +411,7 @@
 			files = (
 				CC8575FC2534759600075D98 /* ViewController.swift in Sources */,
 				CC8575F82534759600075D98 /* AppDelegate.swift in Sources */,
+				CCAA83962538488000180D21 /* Address.swift in Sources */,
 				CC8575FA2534759600075D98 /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

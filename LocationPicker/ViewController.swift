@@ -8,6 +8,9 @@
 import UIKit
 import NMapsMap
 import Then
+import Alamofire
+import SwiftyJSON
+
 
 class ViewController: UIViewController {
     var mapView = NMFMapView()
@@ -16,6 +19,9 @@ class ViewController: UIViewController {
     var task: DispatchWorkItem?
     var addressLabel = UILabel()
     var searchTextField = UITextField()
+    let headers: HTTPHeaders = [ "Authorization": "KakaoAK 6cd40b04c090b1a033634e5051aab78c" ]
+    let decoder = JSONDecoder()
+    var totalList: [Address] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -76,8 +82,39 @@ class ViewController: UIViewController {
             $0.heightAnchor.constraint(equalToConstant: 50).isActive = true
         }
     }
-    func getAddress(keyword: String) -> String {
-        print(keyword)
+    func search(keyword: String) -> String {
+        let parameters: [String: String] = [
+            "query": keyword
+        ]
+        AF.request("https://dapi.kakao.com/v2/local/search/address.json",
+                   method: .get,
+                   parameters: parameters,
+                   headers: headers).responseJSON(completionHandler: { [self] responds in
+                    switch responds.result {
+                    case .success(let value):
+                        if let addressList = JSON(value)["documents"].array {
+                            for item in addressList {
+                                let addressName = item["address_name"].string ?? ""
+                                let jibunAddress = item["address_name"].string ?? "없음"
+                                let roadAddress = item["road_address"].string ?? "없음"
+                                let depthOneName = item["address"]["region_1depth_name"].string ?? ""
+                                let depthTwoName = item["address"]["region_2depth_name"].string ?? ""
+                                let depthThreeName = item["address"]["region_3depth_name"].string ?? ""
+                                let postCode = (item["address"]["zip_code"].string ?? "").isEmpty ? "우편번호 없음" : item["address"]["zip_code"].string ?? ""
+                                self.totalList.append(Address(addressName: addressName,
+                                                              postCode: postCode,
+                                                              roadAddr: roadAddress,
+                                                              jibunAddr: jibunAddress,
+                                                              depthOneAddr: depthOneName,
+                                                              deptTwoAddr: depthTwoName,
+                                                              deptThreeAddr: depthThreeName))
+                            }
+                        }
+                        print(totalList)
+                    case .failure(let err) :
+                        print(err)
+                    }
+                   })
         return keyword
     }
 }
@@ -88,7 +125,6 @@ extension ViewController: NMFMapViewCameraDelegate {
             addressLabel.text = "\(mapView.cameraPosition.target.lat),   \(mapView.cameraPosition.target.lng)"
             UIView.animate(withDuration: 0.25, delay: 0, usingSpringWithDamping: 0.5, initialSpringVelocity: 0.5, options: .curveEaseOut, animations: {
                 self.pin.transform = CGAffineTransform(translationX: 0, y: 0)
-                
             })
         }
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5, execute: task!)
@@ -107,7 +143,7 @@ extension ViewController: UITextFieldDelegate {
             print("검색어를 입력해주세요 ")
             return false
         }else {
-            getAddress(keyword: textField.text ?? "")
+            search(keyword: textField.text ?? "")
             return true
         }
     }
